@@ -1,0 +1,108 @@
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: bancoDigital-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: bancoDigitalUser
+      MYSQL_PASSWORD: bancoDigitalPassword
+      # Configurações de segurança para desenvolvimento
+      MYSQL_ROOT_HOST: '%'
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --skip-character-set-client-handshake
+      --skip-name-resolve
+      --lower_case_table_names=1
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    networks:
+      - bancodigital-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      timeout: 20s
+      retries: 15
+      interval: 10s
+      start_period: 30s
+
+  # Spring Boot Application
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bancoDigital-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # Database Configuration - USANDO VARIÁVEIS DO .ENV
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      
+      # JPA Configuration
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: true
+      SPRING_JPA_GENERATE_DDL: true
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
+      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: true
+      
+      # JWT Configuration - USANDO VARIÁVEL DO .ENV
+      API_SECURITY_TOKEN_SECRET: ${JWT_SECRET}
+      
+      # Spring Profiles - USANDO VARIÁVEL DO .ENV
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      
+      # Spring Boot Configuration
+      SPRING_APPLICATION_NAME: BancoDigital
+      SPRING_OUTPUT_ANSI_ENABLED: ALWAYS
+
+      # Cache
+      SPRING_CACHE_TYPE: simple
+      
+      # SpringDoc OpenAPI Configuration
+      SPRINGDOC_API_DOCS_PATH: /v3/api-docs
+      SPRINGDOC_SWAGGER_UI_PATH: /swagger-ui.html
+      SPRINGDOC_SWAGGER_UI_TRY_IT_OUT_ENABLED: true
+      SPRINGDOC_SWAGGER_UI_OPERATIONS_SORTER: method
+      SPRINGDOC_SWAGGER_UI_TAGS_SORTER: alpha
+      SPRINGDOC_SWAGGER_UI_FILTER: true
+      
+      # JPA Auditing
+      SPRING_JPA_PROPERTIES_HIBERNATE_ENABLE_LAZY_LOAD_NO_TRANS: true
+      
+      # Logging
+      LOGGING_LEVEL_COM_BANCODIGITAL: DEBUG
+      LOGGING_LEVEL_ORG_HIBERNATE_SQL: DEBUG
+      LOGGING_LEVEL_ORG_HIBERNATE_TYPE_DESCRIPTOR_SQL_BASICBINDER: TRACE
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - bancodigital-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  bancodigital-network:
+    driver: bridge
