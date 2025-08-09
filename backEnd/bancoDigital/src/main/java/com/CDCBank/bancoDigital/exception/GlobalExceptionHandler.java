@@ -115,4 +115,24 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+
+    /**
+ * Trata exceções de usuário não encontrado
+ */
+@ExceptionHandler(UserNotFoundException.class)
+public ResponseEntity<ErrorResponse> handleUserNotFoundException(
+        UserNotFoundException ex, WebRequest request) {
+    
+    log.error("Usuário não encontrado: {}", ex.getMessage());
+    
+    ErrorResponse errorResponse = ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.NOT_FOUND.value())
+            .error("Usuário Não Encontrado")
+            .message(ex.getMessage())
+            .path(request.getDescription(false).replace("uri=", ""))
+            .build();
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+}
 }
