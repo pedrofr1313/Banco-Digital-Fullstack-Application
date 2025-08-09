@@ -146,50 +146,44 @@ public class UsuarioController {
         return ResponseEntity.ok(response);
     }
 
-     @Operation(summary = "Atualizar campos especificos", description = "Atualiza apenas as configurações especificadas usando PATCH. "
+     @Operation(summary = "Atualizar campos especificos", description = "Atualiza apenas os campos especificados usando PATCH. "
             +
             "Permite atualizar um ou múltiplos campos de uma só vez. " +
             "Validações automáticas são aplicadas a cada campo.", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Map com as configurações a serem atualizadas", required = true, content = @Content(mediaType = "application/json", examples = {
-                    @ExampleObject(name = "Atualizar apenas taxa de matrícula", value = """
+                    @ExampleObject(name = "Atualizar apenas o nome", value = """
                             {
-                              "taxaMatricula": 120.0
+                            "id":1,  
+                            "nome":"Joao Paulo"
                             }
                             """),
-                    @ExampleObject(name = "Atualizar múltiplas configurações", value = """
+                    @ExampleObject(name = "Atualizar varios campos", value = """
                             {
-                              "taxaMatricula": 150.0,
-                              "diaVencimentoPagamentos": 10,
-                              "maxAlunosPorTurma": 5
-                            }
-                            """),
-                    @ExampleObject(name = "Atualizar todas as configurações", value = """
-                            {
-                              "taxaMatricula": 100.0,
-                              "diaVencimentoPagamentos": 9,
-                              "maxAlunosPorTurma": 4,
-                              "mesesAusenciaPermitida": 3,
+                               "id":1,  
+                            "nome":"Joao Paulo",
+                              "rendamensal":10000
+                              "datanascimento":"2004-01-01"
                             }
                             """)
             })))
 
     @PatchMapping
     public ResponseEntity<PatchUserDTO> atualizarinformacoes(@RequestBody PatchUserDTO informacoes) {
-        log.info("Atualizando configurações específicas: {}", informacoes.toString());
+        log.info("Atualizando informações específicas: {}", informacoes.toString());
 
         try {
             Usuario usuarioAtualizado = usuarioService.atualizarCampos(informacoes);
 
-            log.info("Configurações atualizadas com sucesso");
+            log.info("Campos atualizados com sucesso");
 
             return ResponseEntity.ok(usuarioMapper.toPatchResponseDTO(usuarioAtualizado));
 
         } catch (IllegalArgumentException e) {
-            log.warn("Erro de validação ao atualizar configurações: {}", e.getMessage());
+            log.warn("Erro de validação ao atualizar : {}", e.getMessage());
             throw e;
 
         } catch (Exception e) {
-            log.error("Erro inesperado ao atualizar configurações: {}", e.getMessage(), e);
-            throw new RuntimeException("Erro interno ao atualizar configurações", e);
+            log.error("Erro inesperado ao atualizar : {}", e.getMessage(), e);
+            throw new RuntimeException("Erro interno ao atualizar ", e);
         }
     }
 

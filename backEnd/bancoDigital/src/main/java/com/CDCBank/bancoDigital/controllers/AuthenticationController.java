@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Autorização", description = "Gerenciamento de login e autorizações do sistema RockIt English")
+@Tag(name = "Autorização", description = "Gerenciamento de login e autorizações do sistema ")
 public class AuthenticationController {
 
     private final UsuarioService usuarioService;
@@ -54,33 +54,28 @@ public ResponseEntity<LoginResponse> login(
         @RequestBody @Valid LoginRequest loginRequest,
         HttpServletResponse response) { 
     
-    log.info("=== INÍCIO DO LOGIN ===");
+   
     log.info("Tentativa de login para o email: {}", loginRequest.email());
     
     try {
-        log.info("1. Criando UsernamePasswordAuthenticationToken...");
+        
         var usernamePassword = new UsernamePasswordAuthenticationToken(
             loginRequest.email(), 
             loginRequest.senha()
         );
-        log.info("2. Token criado com sucesso");
-        
-        log.info("3. Chamando authenticationManager.authenticate...");
+      
         var auth = this.authenticationManager.authenticate(usernamePassword);
-        log.info("4. Autenticação realizada com sucesso");
+       
         
-        log.info("5. Obtendo principal (usuário)...");
+
         var usuario = (Usuario) auth.getPrincipal();
-        log.info("6. Usuário obtido: ID={}, Email={}", 
-                usuario != null ? usuario.getId() : "null", 
-                usuario != null ? usuario.getEmail() : "null");
         
-        log.info("7. Gerando token JWT...");
+        
+        
         var token = tokenService.generateToken(usuario);
-        log.info("8. Token gerado com sucesso (primeiros 20 chars): {}", 
-                token != null ? token.substring(0, Math.min(20, token.length())) : "null");
+      
         
-        log.info("9. Criando cookie...");
+       
         Cookie authCookie = new Cookie("authToken", token);
         authCookie.setHttpOnly(true);                   
         authCookie.setSecure(true);                      
@@ -88,9 +83,8 @@ public ResponseEntity<LoginResponse> login(
         authCookie.setMaxAge(7200);
         authCookie.setAttribute("SameSite", "Strict");
         response.addCookie(authCookie);
-        log.info("10. Cookie criado e adicionado");
         
-        log.info("11. Construindo UsuarioLoginDTO...");
+        
         var usuarioLoginDto = UsuarioLoginDTO.builder()
                 .id(usuario.getId())
                 .nome(usuario.getNome())
@@ -100,19 +94,16 @@ public ResponseEntity<LoginResponse> login(
                 .dataNascimento(usuario.getDataNascimento())
                 .idFiscal(usuario.getIdFiscal())
                 .build();
-        log.info("12. UsuarioLoginDTO criado com sucesso");
+      
         
-        log.info("13. Construindo LoginResponse...");
+      
         var loginResponse = LoginResponse.builder()
                 .tipoToken("Bearer")                
                 .expiresIn(7200000L)              
                 .usuario(usuarioLoginDto)          
                 .message("Login realizado com sucesso") 
                 .build();
-        log.info("14. LoginResponse criado com sucesso");
         
-        log.info("15. Retornando ResponseEntity...");
-        log.info("=== FIM DO LOGIN - SUCESSO ===");
         return ResponseEntity.ok(loginResponse);
         
     } catch (Exception e) {
