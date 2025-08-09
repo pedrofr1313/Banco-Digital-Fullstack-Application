@@ -187,4 +187,27 @@ public class UsuarioController {
         }
     }
 
+     @Operation(summary = "Buscar usuário por ID", 
+               description = "Retorna um usuário específico através do seu ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+            @ApiResponse(responseCode = "403", description = "Sem permissão para buscar usuário"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDTO> buscarPorId(
+            @Parameter(description = "ID do usuário", required = true, example = "1")
+            @PathVariable Long id) {
+        
+        log.info("Buscando usuário por ID: {}", id);
+
+        Usuario usuario = usuarioService.findById(id);
+        UsuarioResponseDTO response = usuarioMapper.toResponseDTO(usuario);
+        
+        log.info("Usuário encontrado - ID: {} | Email: {}", usuario.getId(), usuario.getEmail());
+        
+        return ResponseEntity.ok(response);
+    }
+
 }

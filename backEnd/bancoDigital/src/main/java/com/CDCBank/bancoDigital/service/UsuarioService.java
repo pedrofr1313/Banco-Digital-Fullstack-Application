@@ -51,7 +51,19 @@ public class UsuarioService {
                 .findFirst()
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email)); }
 
+    
+     @Transactional
+    public Usuario findById(Long id) {
+        log.info("Buscando usuário com id: {}", id);
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id)); 
+            }
+
     /**
+    
+    
+                /**
+     * 
      * Método para criar um novo usuário a partir de um DTO.
      * 
      * @param usuarioCreateDTO O DTO com os dados do usuário a ser criado.
