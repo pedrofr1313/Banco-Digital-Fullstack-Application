@@ -3,6 +3,7 @@ package com.CDCBank.bancoDigital.service;
 import com.CDCBank.bancoDigital.dto.request.PatchUserDTO;
 import com.CDCBank.bancoDigital.dto.request.UsuarioCreateDTO;
 import com.CDCBank.bancoDigital.exception.DuplicateResourceException;
+import com.CDCBank.bancoDigital.exception.ResourceNotFoundException;
 import com.CDCBank.bancoDigital.exception.UserNotFoundException;
 import com.CDCBank.bancoDigital.models.Usuario;
 import com.CDCBank.bancoDigital.repository.UsuarioRepository;
@@ -41,6 +42,14 @@ public class UsuarioService {
         log.info("Salvando usuário: {}", usuario);
         return usuarioRepository.save(usuario);
     }
+
+     @Transactional
+    public Usuario findByUsername(String email) {
+        log.info("Buscando usuário com email: {}", email);
+        return usuarioRepository.findAll().stream()
+                .filter(usuario -> usuario.getEmail().equalsIgnoreCase(email))
+                .findFirst()
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email)); }
 
     /**
      * Método para criar um novo usuário a partir de um DTO.

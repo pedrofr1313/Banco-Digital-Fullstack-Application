@@ -22,29 +22,28 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    // @Autowired
-    // private final SecurityFilter securityFilter;
+     @Autowired
+     private final SecurityFilter securityFilter;
      @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                // HABILITAR CORS
+                
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        // Swagger - sempre público
+                        
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         
-                        // Rotas de autenticação - públicas
+                        
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/auth/verify").permitAll()
-                        .requestMatchers("/usuarios/admin").permitAll()
+                        .requestMatchers("/usuarios/usuario").permitAll()
                        
-                        // TODAS AS OUTRAS ROTAS PRECISAM DE AUTENTICAÇÃO VIA COOKIE
-                        // .anyRequest().authenticated()
-                        .anyRequest().permitAll()
+                        
+                        .anyRequest().authenticated()
                 )
-                //.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -52,20 +51,20 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // URLs permitidas (seu frontend)
+        
         configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:3000",  // React dev server
-            "http://localhost:5173",  // Vite dev server
+            "http://localhost:3000",  
+            "http://localhost:5173", 
             "http://127.0.0.1:3000",
             "http://127.0.0.1:5173"
         ));
         
-        // Métodos HTTP permitidos
+        
         configuration.setAllowedMethods(Arrays.asList(
             "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
         ));
         
-        // Headers permitidos
+        
         configuration.setAllowedHeaders(Arrays.asList(
             "Authorization", 
             "Content-Type", 
@@ -74,16 +73,16 @@ public class SecurityConfig {
             "Cache-Control"
         ));
         
-        // CRÍTICO: Permitir cookies/credentials
+        
         configuration.setAllowCredentials(true);
         
-        // Headers expostos para o frontend
+    
         configuration.setExposedHeaders(Arrays.asList(
             "Authorization",
             "Set-Cookie"
         ));
         
-        // Cache preflight por 1 hora
+        
         configuration.setMaxAge(3600L);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
