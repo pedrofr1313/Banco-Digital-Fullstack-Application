@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import { useAuth } from "@/contexts/AuthContext";
 import { apiClient } from "@/api/apiClient";
 import { Button } from "@/components/ui/button"
 import { LogOut } from "lucide-react";
 const Navbar = () => {
-      const { logout, user } = useAuth();
+      const { logout } = useAuth();
       const [isModalOpen, setIsModalOpen] = useState(false);
 
      const confirmLogout = async () => {

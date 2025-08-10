@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Edit2, Save, X, UserRound, ArrowLeft, Trash2 } from 'lucide-react';
 import { apiClient } from '@/api/apiClient';
 import Navbar from '@/components/ui/Navbar';
+import { useAuth } from '@/contexts/AuthContext';
 import type { User } from '@/types/Types';
 
 const Perfil = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
+  const{setUser,
+      setUserType,
+      setIsAuthenticated,} = useAuth();
   const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -17,7 +20,7 @@ const Perfil = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
   
-  // Estados para os campos editáveis
+  
   const [editData, setEditData] = useState({
     nome: '',
     dataNascimento: '',
@@ -84,7 +87,7 @@ const Perfil = () => {
       const response = await apiClient.patch('/usuarios', payload);
       
       if (response.success) {
-        // Atualiza os dados locais
+       
         setUserData(prev => prev ? {
           ...prev,
           nome: editData.nome,
@@ -93,6 +96,7 @@ const Perfil = () => {
         } : null);
         
         setIsEditing(false);
+        alert('Perfil atualizado com sucesso!');
       }
     } catch (error) {
       console.error('Erro ao atualizar perfil:', error);
@@ -102,7 +106,7 @@ const Perfil = () => {
   };
 
   const handleCancel = () => {
-    // Restaura os dados originais
+   
     if (userData) {
       setEditData({
         nome: userData.nome || '',
@@ -122,7 +126,13 @@ const Perfil = () => {
       const response = await apiClient.delete(`/usuarios/${id}`);
       
       if (response.success) {
-        // Redireciona para uma página de confirmação ou login após deletar
+
+        setIsAuthenticated(false);
+        setUser(null);
+        setUserType(null);
+        localStorage.removeItem('id');
+        localStorage.removeItem('userType');
+        alert('Conta deletada com sucesso.');
         navigate('/login', { 
           replace: true,
           state: { message: 'Conta deletada com sucesso' }
@@ -130,7 +140,7 @@ const Perfil = () => {
       }
     } catch (error) {
       console.error('Erro ao deletar conta:', error);
-      // Você pode adicionar um toast ou notificação de erro aqui
+     
     } finally {
       setDeleting(false);
       setShowDeleteModal(false);
@@ -146,7 +156,7 @@ const Perfil = () => {
 
   const formatDate = (dateString: string) => {
     if (!dateString) return 'Não informado';
-    // Cria a data usando os componentes da string para evitar problemas de fuso horário
+    
     const dateParts = dateString.split('T')[0].split('-');
     const date = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
     return date.toLocaleDateString('pt-BR');
@@ -223,7 +233,7 @@ const Perfil = () => {
                 )}
               </div>
 
-               {/* Renda Mensal */}
+               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Renda Mensal
@@ -235,7 +245,7 @@ const Perfil = () => {
                     onChange={(e) => handleInputChange('rendaMensal', Number(e.target.value))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     placeholder="Digite sua renda mensal"
-                    step="0.01"
+                    
                   />
                 ) : (
                    <p className="text-gray-900 py-1">

@@ -3,15 +3,16 @@ package com.CDCBank.bancoDigital.service;
 import com.CDCBank.bancoDigital.dto.request.PatchUserDTO;
 import com.CDCBank.bancoDigital.dto.request.UsuarioCreateDTO;
 import com.CDCBank.bancoDigital.exception.DuplicateResourceException;
-import com.CDCBank.bancoDigital.exception.ResourceNotFoundException;
+
 import com.CDCBank.bancoDigital.exception.UserNotFoundException;
 import com.CDCBank.bancoDigital.models.Usuario;
+import com.CDCBank.bancoDigital.repository.TransacaoRepository;
 import com.CDCBank.bancoDigital.repository.UsuarioRepository;
 
 import java.util.Date;
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Map;
+
 import java.util.Optional;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -30,7 +31,7 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final TransacaoRepository transacaoRepository;
     /**
      * Método para salvar um usuário no repositório.
      * 
@@ -104,15 +105,20 @@ public class UsuarioService {
      * 
      * @param id O ID do usuário a ser deletado.
      */
-    @Transactional
-    public void deleteById(Long id) {
-        if(usuarioRepository.findById(id).isEmpty()){
+   @Transactional
+public void deleteById(Long id) {
+    if(usuarioRepository.findById(id).isEmpty()){
        throw new UserNotFoundException("Usuário não encontrado com ID: " + id);
-        }
-        log.info("Deletando usuário com ID: {}", id);
-        usuarioRepository.deleteById(id);
-        log.info("Usuário com ID: {} deletado com sucesso", id);
     }
+    log.info("Deletando usuário com ID: {}", id);
+    
+    // Deletar todas as transações relacionadas ao usuário primeiro
+    transacaoRepository.deleteByRemetenteIdOrDestinatarioId(id, id);
+    log.info("Transações relacionadas ao usuário ID: {} deletadas", id);
+    
+    usuarioRepository.deleteById(id);
+    log.info("Usuário com ID: {} deletado com sucesso", id);
+}
 
 
       /**

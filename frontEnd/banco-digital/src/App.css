@@ -160,3 +160,13 @@
     @apply bg-background text-foreground;
   }
 }
+/* Chrome, Edge, Safari */
+input::-ms-reveal,
+input::-ms-clear,
+input::-webkit-credentials-auto-fill-button,
+input::-webkit-password-toggle-button {
+  display: none !important;
+}
+
+
+

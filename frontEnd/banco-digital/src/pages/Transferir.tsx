@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { Search, X, ArrowLeft, Send, User } from "lucide-react";
 import { apiClient } from "@/api/apiClient";
 import { Link, useNavigate } from 'react-router-dom';
@@ -70,10 +70,8 @@ const Transferir = () => {
 
   const formatIdFiscal = (idFiscal: string) => {
     if (idFiscal.length === 11) {
-      // CPF: 123.456.789-00
       return idFiscal.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
     } else if (idFiscal.length === 14) {
-      // CNPJ: 12.345.678/0001-90
       return idFiscal.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
     }
     return idFiscal;

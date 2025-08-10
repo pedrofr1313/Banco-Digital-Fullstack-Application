@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type {FormEvent }from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { apiClient } from '../api/apiClient';
 import { Input } from "@/components/ui/input";
@@ -13,11 +13,6 @@ interface LoginCredentials {
   senha: string;
 }
 
-interface LocationState {
-  from: {
-    pathname: string;
-  };
-}
 
 const Login: React.FC = () => {
   const [credentials, setCredentials] = useState<LoginCredentials>({ 
@@ -30,7 +25,7 @@ const Login: React.FC = () => {
   
   const { login } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
+
   
   
 
@@ -57,7 +52,6 @@ const Login: React.FC = () => {
   const handleInputChange = (field: keyof LoginCredentials) => 
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setCredentials({ ...credentials, [field]: e.target.value });
-      // Limpa o erro quando o usuário começa a digitar
       if (error) setError('');
     };
 

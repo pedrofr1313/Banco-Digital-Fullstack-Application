@@ -6,9 +6,12 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
-  userType: 'PF' | 'PJ' | null; // Novo campo
+  userType: 'PF' | 'PJ' | null;
   login: (userData: User) => void;
   logout: () => void;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setUserType: React.Dispatch<React.SetStateAction<'PF' | 'PJ' | null>>;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 } 
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,12 +28,9 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-// Função para determinar tipo de usuário baseado no idFiscal
+
 const getUserType = (idFiscal: string): 'PF' | 'PJ' => {
-  // Remove caracteres não numéricos para verificar o tamanho
   const cleanIdFiscal = idFiscal.replace(/\D/g, '');
-  
-  // CPF tem 11 dígitos, CNPJ tem 14 dígitos
   return cleanIdFiscal.length === 11 ? 'PF' : 'PJ';
 };
 
@@ -43,7 +43,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const checkAuthStatus = async () => {
-      // Sempre começar com loading true
       setLoading(true);
       
       const userData = localStorage.getItem('id');
@@ -54,13 +53,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         if (response.success && userData) {
           setIsAuthenticated(true);
-          
-          // Se temos o tipo armazenado, usar ele
+
           if (storedUserType) {
             setUserType(storedUserType);
           }
           
-          // Buscar dados do usuário para determinar/confirmar o tipo
+    
           try {
             const userResponse = await apiClient.get(`/usuarios/${JSON.parse(userData)}`);
             if (userResponse.success && userResponse.data.idFiscal) {
@@ -73,7 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             console.error('Erro ao buscar dados do usuário:', userError);
           }
         } else {
-          // Limpar estado se não autenticado
+
           setIsAuthenticated(false);
           setUser(null);
           setUserType(null);
@@ -103,7 +101,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = (userData: User) => {
     localStorage.setItem('id', JSON.stringify(userData.id));
     
-    // Determinar e armazenar o tipo de usuário
     if (userData.idFiscal) {
       const type = getUserType(userData.idFiscal);
       setUserType(type);
@@ -116,13 +113,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = async () => {
     try {
-      // Opcional: chamar endpoint de logout no servidor
       await apiClient.post('/auth/logout');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
     } finally {
       localStorage.removeItem('id');
-      localStorage.removeItem('userType'); // Remove o tipo de usuário
+      localStorage.removeItem('userType'); 
       setUser(null);
       setUserType(null);
       setIsAuthenticated(false);
@@ -130,10 +126,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const value = {
+    setUser,
+      setUserType,
+      setIsAuthenticated,
     user,
     isAuthenticated,
     loading,
-    userType, // Novo campo no contexto
+    userType, 
     login,
     logout
   };

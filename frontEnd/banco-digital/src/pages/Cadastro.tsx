@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserPlus, AlertCircle, Eye, EyeOff, CheckCircle } from "lucide-react";
+import { UserPlus, AlertCircle, Eye, EyeOff } from "lucide-react";
 
 interface CadastroData {
   nome: string;
@@ -38,7 +38,6 @@ const Cadastro: React.FC = () => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = field === 'rendaMensal' ? Number(e.target.value) : e.target.value;
       setFormData({ ...formData, [field]: value });
-      // Limpa os erros quando o usuário começa a digitar
       if (error) setError('');
       if (success) setSuccess('');
     };
@@ -126,13 +125,11 @@ const Cadastro: React.FC = () => {
           navigate('/login');
         }, 2000);
       } else {
-        // Captura o erro do backend quando response.success é false
         const errorMessage =  response.error?.message || 'Erro ao criar conta';
         console.log("ERRO BACKEND:", errorMessage);
         setError(errorMessage);
       }
     } catch (err: any) {
-      // Captura erros de requisição (status 4xx, 5xx, etc.)
       const errorMessage = err.message || 'Erro interno do servidor. Tente novamente.';
       console.log("ERRO CATCH:", errorMessage);
       setError(errorMessage);
@@ -178,9 +175,9 @@ const Cadastro: React.FC = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-              {/* Tipo de Cadastro */}
+              
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-gray-700 block flex justify-start">
                   Tipo de Cadastro
                 </label>
                 <div className="flex gap-4">
@@ -193,7 +190,7 @@ const Cadastro: React.FC = () => {
                       onChange={(e) => setTipoDocumento(e.target.value as 'cpf' | 'cnpj')}
                       className="mr-2"
                     />
-                    <span className="text-sm">Pessoa Física (CPF)</span>
+                    <span className="text-sm ">Pessoa Física (CPF)</span>
                   </label>
                   <label className="flex items-center">
                     <input
@@ -211,7 +208,7 @@ const Cadastro: React.FC = () => {
 
               {/* Campo Nome */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-gray-700 block flex justify-start">
                   {tipoDocumento === 'cpf' ? 'Nome Completo' : 'Razão Social'}
                 </label>
                 <Input
@@ -226,7 +223,7 @@ const Cadastro: React.FC = () => {
 
               {/* Campo Email */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-gray-700 block flex justify-start">
                   Email
                 </label>
                 <Input
@@ -241,7 +238,7 @@ const Cadastro: React.FC = () => {
 
               {/* Campo Senha */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-gray-700 block flex justify-start">
                   Senha
                 </label>
                 <div className="relative">
@@ -269,7 +266,7 @@ const Cadastro: React.FC = () => {
 
               {/* Campo CPF/CNPJ */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-gray-700 block flex justify-start">
                   {tipoDocumento === 'cpf' ? 'CPF' : 'CNPJ'}
                 </label>
                 <Input
@@ -286,28 +283,28 @@ const Cadastro: React.FC = () => {
 
               {/* Campo Data */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-gray-700 block flex justify-start">
                   {tipoDocumento === 'cpf' ? 'Data de Nascimento' : 'Data de Fundação'}
                 </label>
                 <Input
                   type="date"
                   value={formData.dataNascimento}
                   onChange={handleInputChange('dataNascimento')}
-                  className="border-gray-300 text-sm sm:text-base"
+                  className="border-gray-300 text-sm sm:text-base  "
                   required
                 />
               </div>
 
               {/* Campo Renda Mensal */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-gray-700 block flex justify-start">
                   {tipoDocumento === 'cpf' ? 'Renda Mensal (R$)' : 'Faturamento Mensal (R$)'}
                 </label>
                 <Input
                   type="number"
                   placeholder="0,00"
-                  min="1"
-                  step="0.01"
+                  min="500"
+                  step="500"
                   value={formData.rendaMensal || ''}
                   onChange={handleInputChange('rendaMensal')}
                   className="border-gray-300 text-sm sm:text-base"

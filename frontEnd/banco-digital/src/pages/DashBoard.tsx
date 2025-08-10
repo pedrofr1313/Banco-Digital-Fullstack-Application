@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { LogOut, ArrowUpRight, Eye, EyeOff,Banknote,UserRound } from "lucide-react";
+import { useState, useEffect } from "react";
+import {  ArrowUpRight, Eye, EyeOff,Banknote,UserRound } from "lucide-react";
 import { apiClient } from "@/api/apiClient";
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Navbar from "@/components/ui/Navbar";
 import { useAuth } from "@/contexts/AuthContext";
 import type { User } from "@/types/Types";
@@ -11,7 +11,7 @@ const DashBoard = () => {
   const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [showBalance, setShowBalance] = useState(true);
-  const { logout, user } = useAuth();
+  const {  user } = useAuth();
 
   useEffect(() => {
     const fetchUserData = async () => {

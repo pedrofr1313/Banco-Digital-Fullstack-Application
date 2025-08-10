@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Search, ArrowLeft, ArrowUpRight, ArrowDownLeft, User, Clock } from "lucide-react";
+import  { useState, useEffect } from "react";
+import { Search, ArrowLeft, Clock } from "lucide-react";
 import { apiClient } from "@/api/apiClient";
 import { Link } from 'react-router-dom';
 import Navbar from "@/components/ui/Navbar";
@@ -21,13 +21,7 @@ interface Transacao {
   outroUsuario: OutroUsuario;
 }
 
-interface HistoricoResponse {
-  content: Transacao[];
-  totalElements: number;
-  totalPages: number;
-  last: boolean;
-  first: boolean;
-}
+
 
 const Historico = () => {
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);
@@ -198,9 +192,7 @@ const Historico = () => {
             <h3 className="text-lg font-medium text-gray-900">
               {searchTerm ? `Resultados para "${searchTerm}"` : 'Suas transferências'}
             </h3>
-            <p className="text-sm text-gray-500 mt-1">
-              {transacoesFiltradas.length} transação(ões) encontrada(s)
-            </p>
+           
           </div>
 
           <div className="divide-y divide-gray-200">
