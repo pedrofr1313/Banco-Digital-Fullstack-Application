@@ -89,7 +89,7 @@ Este projeto é uma solução para o teste técnico da **CDC Bank**, implementan
 ---
 
 ## 📄 Enunciado Original do Desafio
-O documento do teste técnico está disponível em [`Teste Técnico FULL-STACK.docx`](./Teste%20Técnico%20FULL-STACK.docx).
+O documento do teste técnico está disponível em [`Teste Técnico FULL-STACK.docx`](./Teste%20Técnico%20FULL-STACK[1].pdf).
 
 ---
 
