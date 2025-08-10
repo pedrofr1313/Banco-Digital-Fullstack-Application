@@ -196,18 +196,18 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDTO> buscarPorId(
+    public ResponseEntity<Usuario> buscarPorId(
             @Parameter(description = "ID do usuário", required = true, example = "1")
             @PathVariable Long id) {
         
         log.info("Buscando usuário por ID: {}", id);
 
         Usuario usuario = usuarioService.findById(id);
-        UsuarioResponseDTO response = usuarioMapper.toResponseDTO(usuario);
+        
         
         log.info("Usuário encontrado - ID: {} | Email: {}", usuario.getId(), usuario.getEmail());
         
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(usuario);
     }
 
 }

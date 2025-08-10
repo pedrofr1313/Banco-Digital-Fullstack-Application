@@ -32,6 +32,7 @@ public class UsuarioMapper {
                 .id(usuario.getId())
                 .nome(usuario.getNome())
                 .email(usuario.getEmail())
+                .idFiscal(usuario.getIdFiscal())
                 .build();
     
     }

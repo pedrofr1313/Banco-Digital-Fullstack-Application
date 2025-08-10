@@ -256,7 +256,7 @@ const Cadastro: React.FC = () => {
                   <Button
                     type="button"
                     onClick={toggleSenhaVisibility}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center  bg-neutral text-gray-500 hover:bg-neutral-200"
                   >
                     {showSenha ? (
                       <EyeOff className="w-4 h-4" />

@@ -9,6 +9,9 @@ import ProtectedRoute from './routes/ProtectedRoute'
 import Login from './pages/Login'
 import DashBoard from './pages/DashBoard'
 import Cadastro from './pages/Cadastro'
+import Perfil from './pages/Perfil'
+import Transferir from './pages/Transferir'
+import Historico from './pages/Historico'
 function App() {
 
 
@@ -34,7 +37,21 @@ function App() {
              <Cadastro/>
             </PublicRoute>
           } />
-        
+        <Route path="/perfil/:id" element={
+            <ProtectedRoute>
+             <Perfil/>
+            </ProtectedRoute>
+          } />
+          <Route path="/transferir" element={
+            <ProtectedRoute>
+             <Transferir/>
+            </ProtectedRoute>
+          } />
+          <Route path="/historico" element={
+            <ProtectedRoute>
+             <Historico/>
+            </ProtectedRoute>
+          } />
 
          
         </Routes>

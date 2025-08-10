@@ -44,6 +44,10 @@ const getUserFriendlyErrorMessage = (
     if (errordata?.message) {
   return errordata.message;
     }
+    if(errordata?.mensagem)
+    {
+      return errordata.mensagem;
+    }
   return 'Ocorreu um erro. Por favor, tente novamente.';
 };
 
