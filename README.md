@@ -28,7 +28,7 @@ Este projeto é uma solução para o teste técnico do **CDC Bank**, implementan
    - Certifique-se de que o Docker Desktop está em execução.
 
 2. **Build e inicialização dos containers**
-   ```bash
+   ```cmd
    \backEnd\bancoDigital> setup-all.bat
    ```
    Esse script irá:
