@@ -5,7 +5,8 @@ import { apiClient } from '@/api/apiClient';
 import Navbar from '@/components/ui/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
 import type { User } from '@/types/Types';
-
+import type { ChangeEvent } from 'react';
+import { formatCurrencyInput, parseCurrencyToNumber, formatCurrency } from '../utils/currencyUtils';
 const Perfil = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -239,14 +240,16 @@ const Perfil = () => {
                   Renda Mensal
                 </label>
                 {isEditing ? (
-                  <input
-                    type="number"
-                    value={editData.rendaMensal}
-                    onChange={(e) => handleInputChange('rendaMensal', Number(e.target.value))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    placeholder="Digite sua renda mensal"
-                    
-                  />
+                 <input
+  type="text"
+  value={formatCurrencyInput(editData.rendaMensal || '')}
+  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+    const numericValue = parseCurrencyToNumber(e.target.value);
+    handleInputChange('rendaMensal', numericValue);
+  }}
+  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+  placeholder="0,00"
+/>
                 ) : (
                    <p className="text-gray-900 py-1">
                     {formatCurrency(userData?.rendaMensal || 0)}

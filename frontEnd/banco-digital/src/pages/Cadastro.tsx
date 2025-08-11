@@ -4,7 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { apiClient } from '../api/apiClient';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button"
-
+import { formatCurrencyInput, parseCurrencyToNumber, formatCurrency } from '../utils/currencyUtils';
+import type { ChangeEvent } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserPlus, AlertCircle, Eye, EyeOff } from "lucide-react";
 
@@ -301,15 +302,16 @@ const Cadastro: React.FC = () => {
                   {tipoDocumento === 'cpf' ? 'Renda Mensal (R$)' : 'Faturamento Mensal (R$)'}
                 </label>
                 <Input
-                  type="number"
-                  placeholder="0,00"
-                  min="500"
-                  step="500"
-                  value={formData.rendaMensal || ''}
-                  onChange={handleInputChange('rendaMensal')}
-                  className="border-gray-300 text-sm sm:text-base"
-                  required
-                />
+  type="text"
+  placeholder="0,00"
+  value={formatCurrencyInput(formData.rendaMensal || '')}
+  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+    const numericValue = parseCurrencyToNumber(e.target.value);
+    handleInputChange('rendaMensal')({ target: { value: String(numericValue) } } as React.ChangeEvent<HTMLInputElement>);
+  }}
+  className="border-gray-300 text-sm sm:text-base"
+  required
+/>
               </div>
 
               {/* Botão de Cadastro */}

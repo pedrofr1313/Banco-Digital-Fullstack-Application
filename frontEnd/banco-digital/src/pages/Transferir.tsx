@@ -4,7 +4,8 @@ import { apiClient } from "@/api/apiClient";
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from "@/components/ui/Navbar";
 import { BanknoteArrowUp } from 'lucide-react';
-
+import type { ChangeEvent } from 'react';
+import { formatCurrencyInput, parseCurrencyToNumber, formatCurrency } from '../utils/currencyUtils';
 interface Cliente {
   id: number;
   nome: string;
@@ -236,14 +237,16 @@ const Transferir = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Valor (R$)
                 </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  placeholder="0,00"
-                  value={valor}
-                  onChange={(e) => setValor(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
-                />
+              <input
+  type="text"
+  placeholder="0,00"
+  value={formatCurrencyInput(valor)}
+  onChange={(e) => {
+    const numericValue = parseCurrencyToNumber(e.target.value);
+    setValor(numericValue.toString());
+  }}
+  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+/>
               </div>
 
               <div>
