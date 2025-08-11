@@ -1,6 +1,6 @@
 # Banco Digital - CDC Bank
 
-Este projeto é uma solução para o teste técnico da **CDC Bank**, implementando uma aplicação completa de banco digital com autenticação segura, CRUD de clientes e operações de transações financeiras entre contas.
+Este projeto é uma solução para o teste técnico do **CDC Bank**, implementando uma aplicação completa de banco digital com autenticação segura, CRUD de clientes e operações de transações financeiras entre contas.
 
 ---
 
