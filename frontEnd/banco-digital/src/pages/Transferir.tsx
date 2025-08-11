@@ -169,9 +169,7 @@ const Transferir = () => {
             <h3 className="text-lg font-medium text-gray-900">
               {searchTerm ? `Resultados para "${searchTerm}"` : 'Todos os clientes'}
             </h3>
-            <p className="text-sm text-gray-500 mt-1">
-              {clientesFiltrados.length-1} cliente(s) encontrado(s)
-            </p>
+           
           </div>
 
           <div className="divide-y divide-gray-200">
