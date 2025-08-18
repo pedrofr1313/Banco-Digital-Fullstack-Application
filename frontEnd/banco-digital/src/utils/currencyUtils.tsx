@@ -27,7 +27,7 @@ export const parseCurrencyToNumber = (value: string | number | null | undefined)
   return numericValue ? parseFloat(numericValue) / 100 : 0;
 };
 
-// Interface para o retorno do hook
+
 interface UseCurrencyInputReturn {
   displayValue: string;
   numericValue: number;

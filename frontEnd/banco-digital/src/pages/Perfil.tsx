@@ -328,7 +328,7 @@ const Perfil = () => {
               </div>
             )}
 
-            {/* Seção de Zona de Perigo */}
+           
             
           </div>
         </div>

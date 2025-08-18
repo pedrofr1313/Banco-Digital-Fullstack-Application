@@ -43,9 +43,9 @@ public class Usuario implements UserDetails {
     private Float saldo;
     
     @Column(nullable = false)
-    private Float rendaMensal; // ✅ Mudei para Float para consistência
+    private Float rendaMensal; 
 
-    // ✅ Implementação segura do equals - só usa ID
+   
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -54,13 +54,13 @@ public class Usuario implements UserDetails {
         return Objects.equals(id, usuario.id);
     }
 
-    // ✅ Implementação segura do hashCode - só usa ID
+   
     @Override
     public int hashCode() {
         return Objects.hash(id);
     }
 
-    // ✅ toString seguro - não inclui senha nem campos sensíveis
+ 
     @Override
     public String toString() {
         return "Usuario{" +
@@ -71,7 +71,7 @@ public class Usuario implements UserDetails {
                 '}';
     }
 
-    // Métodos do UserDetails
+    
     @Override
     public String getPassword() {
         return this.senha;

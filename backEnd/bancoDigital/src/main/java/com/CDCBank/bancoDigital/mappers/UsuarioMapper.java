@@ -51,17 +51,4 @@ public class UsuarioMapper {
     }
 
 
-    // public Usuario toEntity(UsuarioResponseDTO dto) {
-    //     if (dto == null) {
-    //         return null;
-    //     }
-
-    //     Usuario usuario = new Usuario();
-    //     usuario.setId(dto.getId());
-    //     usuario.setNome(dto.getNome());
-    //     usuario.setEmail(dto.getEmail());
-    //     usuario.setTipoUsuario(dto.getTipoUsuario());
-        
-    //     return usuario;
-    // }
 }
